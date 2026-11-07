@@ -1,0 +1,9 @@
+{
+  "name": "rembuk-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Input data Rembuk Stunting -> laporan Word & PDF otomatis",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "docx": "^9.0.0", "nodemailer": "^6.9.0" }
+}

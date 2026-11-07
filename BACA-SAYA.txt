@@ -1,0 +1,133 @@
+APLIKASI INPUT LAPORAN REMBUK STUNTING - DESA TUNGGANG
+=======================================================
+Orang mengisi form lewat HP/laptop -> laporan Word + PDF jadi otomatis.
+
+A. SEKALI SAJA (persiapan)
+ 1. Pasang Node.js (versi LTS)      : https://nodejs.org
+ 2. Pasang LibreOffice (untuk PDF)  : https://www.libreoffice.org
+    (Kalau di komputer sudah ada Microsoft Word, LibreOffice boleh dilewati.
+     Tanpa keduanya, hanya file Word yang dibuat.)
+ 3. Pasang ngrok                    : https://ngrok.com/download
+    Daftar akun gratis, lalu jalankan sekali di terminal/CMD:
+       ngrok config add-authtoken TOKEN_ANDA
+ 4. Buka config.json, lalu ubah:
+       "kode_akses"      -> ganti kode rahasia (dibagikan ke petugas pengisi)
+       "nama_kades"      -> nama Pj. Kepala Desa (tercetak di tanda tangan)
+       "nama_ketua_bpd"  -> nama Ketua BPD
+    Kosongkan nama jika ingin ditandatangani tulis tangan (diberi titik-titik).
+
+B. SETIAP KALI DIPAKAI
+ 1. Klik dua kali  mulai.bat   (Mac/Linux: ./mulai.sh)
+    Pertama kali akan memasang kebutuhan otomatis (perlu internet).
+ 2. Klik dua kali  mulai-ngrok.bat   (atau ketik: ngrok http 127.0.0.1:3000)
+ 3. Salin alamat "Forwarding" yang tampil, misal
+       https://abcd-1234.ngrok-free.app
+    Bagikan alamat itu + kode akses ke orang yang akan mengisi.
+    (Pada kunjungan pertama ngrok versi gratis menampilkan halaman
+     peringatan: klik "Visit Site".)
+ 4. Komputer harus menyala dan kedua jendela (mulai & ngrok) tetap terbuka
+    selama form dipakai.
+
+C. HASIL LAPORAN
+ - Setelah mengisi, pengisi langsung dapat tombol unduh Word & PDF.
+ - Semua laporan tersimpan di folder  hasil\  di komputer ini.
+ - Daftar riwayat : http://localhost:3000/riwayat?kode=KODE_AKSES
+
+D. CATATAN KEAMANAN
+ - Selalu ganti kode_akses (jangan pakai bawaan).
+ - Link unduhan berisi kode acak, tidak bisa ditebak, tapi siapa pun yang
+   memegang link bisa membukanya. Jangan sebar link unduhan sembarangan.
+ - Data tersimpan di komputer Anda sendiri, bukan di server pihak lain.
+
+E. CARA LAIN TANPA NGROK: HOSTING GRATIS DI RENDER
+   Dengan cara ini, aplikasi punya alamat tetap, berjalan di internet milik
+   Render, dan komputer Anda TIDAK perlu menyala terus.
+
+   Kekurangan: paket gratis Render membuat aplikasi "tidur" kalau 15 menit
+   tidak ada yang buka. Saat dibuka lagi, perlu sekitar 30 detik untuk
+   bangun. Penyimpanan file di server juga sementara: setiap kali aplikasi
+   tidur-lalu-bangun atau diperbarui, folder "hasil" bisa terhapus. Karena
+   itu, AKTIFKAN pengiriman email (langkah 4) supaya setiap laporan yang
+   jadi otomatis juga terkirim sebagai lampiran email dan tidak hilang.
+
+   1. Buat akun gratis di https://github.com (kalau belum punya).
+   2. Di GitHub, klik "New repository", beri nama misal "laporan-desa",
+      pilih Private, lalu klik "Create repository".
+   3. Di halaman repo itu, klik "Add file" > "Upload files", lalu seret
+      SEMUA isi folder rembuk-app (bukan folder hasil dan node_modules)
+      ke sana. Klik "Commit changes".
+   4. Siapkan email pengirim (disarankan akun Gmail khusus, bukan pribadi):
+      a. Aktifkan verifikasi 2 langkah di akun Gmail itu.
+      b. Buka https://myaccount.google.com/apppasswords, buat App Password
+         baru (nama bebas, misal "laporan-desa"), salin 16 huruf yang
+         muncul (tanpa spasi).
+   5. Buat akun gratis di https://render.com (bisa pakai akun GitHub).
+   6. Klik "New +" > "Web Service", pilih repo "laporan-desa" tadi.
+   7. Isi pengaturan:
+        Name            : terserah, misal laporan-rembuk-stunting
+        Build Command   : npm install
+        Start Command   : node server.js
+        Instance Type   : Free
+   8. Di bagian "Environment Variables", tambahkan:
+        KODE_AKSES        -> kode rahasia untuk pengisi form
+        EMAIL_AKTIF        -> true
+        EMAIL_PENGIRIM     -> alamat Gmail pengirim
+        EMAIL_APP_PASSWORD -> 16 huruf App Password dari langkah 4b
+        EMAIL_TUJUAN       -> email penerima laporan (boleh lebih dari satu,
+                               dipisah koma, misal: a@gmail.com,b@gmail.com)
+   9. Klik "Create Web Service". Tunggu 2-5 menit sampai muncul "Live".
+  10. Alamat tetapnya tampil di atas, bentuknya seperti:
+        https://laporan-rembuk-stunting.onrender.com
+      Alamat ini bisa langsung dibagikan ke pengisi form, tidak berubah-ubah,
+      dan tidak perlu ngrok lagi.
+  11. PDF otomatis: hosting gratis Render TIDAK menyediakan LibreOffice,
+      jadi di Render hanya file Word yang dibuat (PDF akan kosong). File
+      Word tetap bisa dibuka dan disimpan sebagai PDF dari Word/WPS/Google
+      Docs. (Di komputer sendiri lewat mulai.bat, PDF tetap otomatis asal
+      LibreOffice terpasang.)
+
+F. CARA LAIN TANPA KARTU: HOSTING GRATIS DI SNAPDEPLOY
+   Render sekarang mewajibkan kartu untuk verifikasi (lihat bagian E). Kalau
+   tidak mau pakai kartu sama sekali, pakai SnapDeploy. Caranya mirip Render,
+   dan di sini PDF juga tetap otomatis jadi, karena aplikasi dijalankan
+   lewat Dockerfile yang sudah menyertakan LibreOffice di dalamnya.
+
+   1. Buat akun GitHub (kalau belum) dan unggah isi folder rembuk-app ke
+      repo baru, PERSIS seperti langkah 1-3 di bagian E di atas.
+      (File Dockerfile ikut diunggah juga, biarkan apa adanya.)
+   2. Siapkan email pengirim (App Password Gmail) seperti langkah 4 di
+      bagian E, kalau belum.
+   3. Buka https://snapdeploy.dev/register, daftar pakai akun GitHub.
+      Tidak diminta kartu.
+   4. Di dashboard, klik "New Container" > "Deploy from GitHub".
+   5. Pilih repo "laporan-desa" (atau nama repo Anda tadi).
+   6. SnapDeploy akan mendeteksi file Dockerfile secara otomatis dan
+      memakainya untuk membangun aplikasi (prosesnya beberapa menit,
+      karena memasang LibreOffice).
+   7. Sebelum/ setelah deploy pertama, buka pengaturan Environment
+      Variables, tambahkan:
+        KODE_AKSES        -> kode rahasia untuk pengisi form
+        EMAIL_AKTIF        -> true
+        EMAIL_PENGIRIM     -> alamat Gmail pengirim
+        EMAIL_APP_PASSWORD -> 16 huruf App Password Gmail
+        EMAIL_TUJUAN       -> email penerima laporan (boleh beberapa,
+                               dipisah koma)
+   8. Setelah status menjadi "Running"/"Live", alamat tetapnya tampil,
+      bentuknya seperti:
+        https://nama-container-anda.containers.snapdeploy.app
+      Alamat ini tetap, bisa langsung dibagikan ke pengisi form.
+   9. Catatan: paket gratis SnapDeploy juga membuat aplikasi tidur kalau
+      lama tidak dibuka, dan bangun lagi otomatis (~1 menit) saat ada yang
+      membuka linknya lewat browser. Folder "hasil" di dalamnya tetap
+      sementara, jadi tetap andalkan email (langkah 7) supaya laporan
+      tidak hilang.
+
+G. KALAU ADA MASALAH
+ - PDF tidak muncul     : pasang LibreOffice, atau isi "soffice_path" di config.json
+                          (contoh: "C:\\Program Files\\LibreOffice\\program\\soffice.exe")
+ - Port 3000 terpakai   : ubah "port" di config.json, dan pakai angka yang sama di ngrok.
+ - Foto tidak terbaca   : gunakan format JPG/PNG.
+ - ngrok ERR_NGROK_8012 : aplikasi belum jalan. Jalankan mulai.bat DULU, tunggu sampai
+                          tertulis "berjalan", buka http://localhost:3000 di browser
+                          komputer (harus tampil form), baru jalankan mulai-ngrok.bat.
+                          Pakai perintah:  ngrok http 127.0.0.1:3000

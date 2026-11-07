@@ -1,0 +1,28 @@
+{
+  "port": 3000,
+  "kode_akses": "rembuk2026",
+
+  "desa": "Tunggang",
+  "kecamatan": "Pondok Suguh",
+  "kabupaten": "Mukomuko",
+  "provinsi": "Bengkulu",
+  "alamat": "Jln. Lintas Bengkulu - Padang KM 197 Kode Pos 38766",
+
+  "nama_kegiatan": "Rembuk Stunting",
+  "jabatan_kades": "Pj. Kepala Desa",
+  "nama_kades": "",
+  "nama_ketua_bpd": "",
+
+  "uang_saku_per_peserta": 100000,
+  "maks_foto": 8,
+
+  "soffice_path": "",
+
+  "email": {
+    "aktif": false,
+    "catatan": "Isi lewat Environment Variables di Render, JANGAN tulis password di sini kalau kodenya diunggah ke GitHub publik.",
+    "pengirim": "",
+    "app_password": "",
+    "tujuan": []
+  }
+}

@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: laporan-rembuk-stunting
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: KODE_AKSES
+        sync: false
+      - key: EMAIL_AKTIF
+        value: "false"
+      - key: EMAIL_PENGIRIM
+        sync: false
+      - key: EMAIL_APP_PASSWORD
+        sync: false
+      - key: EMAIL_TUJUAN
+        sync: false
